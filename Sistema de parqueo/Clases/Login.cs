@@ -9,6 +9,7 @@ namespace Sistema_de_parqueo.Clases
 {
     internal class Login
     {
+        AppDbContext db = new AppDbContext();
         public Boolean ExisteUsuario(String dui, String contraseña)
         {
             Boolean existe = false;
@@ -24,6 +25,9 @@ namespace Sistema_de_parqueo.Clases
             //        existe = false;
             //    }
             //}
+            var i = db.customers.Where(d => d.customer_DUI == dui
+                        && d.customer_password == contraseña).Select(d => d.customer_DUI).ToList().Count();
+            existe = (i > 0);
             return existe;
 
         }
@@ -42,6 +46,8 @@ namespace Sistema_de_parqueo.Clases
             //        existe = false;
             //    }
             //}
+            var i = db.customers.Where(d => d.customer_DUI == dui).Select(d => d.customer_DUI).ToList().Count();
+            existe = (i > 0);
             return existe;
 
         }
@@ -60,6 +66,12 @@ namespace Sistema_de_parqueo.Clases
 
 
             //}
+            var datos = db.customers.Where(d => d.customer_DUI == dui
+                        && d.customer_password == contraseña).FirstOrDefault();
+            sess.IDcustomer = datos.id_customer;
+            sess.Customer_Lastname = datos.customer_lastname;
+            sess.Customer_name = datos.customer_name;
+            sess.Customer_DUI = datos.customer_DUI;
         }
         public void CerrarSession()
         {
